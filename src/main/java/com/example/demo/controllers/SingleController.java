@@ -38,18 +38,18 @@ public class SingleController {
 
     @PostMapping("/single/add")
     public String createSingle(@ModelAttribute("singleView") SingleView singleView) {
-        Artist artist = singleView.getArtist();
-        Song song = singleView.getSong();
-
-        artist = artistRepository.findById(artist.getId()).orElse(null);
-        song = songRepository.findById(song.getId()).orElse(null);
+        Artist artist = artistRepository.findById(singleView.getArtist().getId()).orElse(null);
+        Song song = songRepository.findById(singleView.getSong().getId()).orElse(null);
 
         Classification classification = new Classification();
         classificationRepository.save(classification);
-        artist.getClassifications().add(classification);
-        song.getClassifications().add(classification);
-        artistRepository.save(artist);
-        songRepository.save(song);
+
+        if (artist != null && song != null) {
+            artist.getClassifications().add(classification);
+            song.getClassifications().add(classification);
+            artistRepository.save(artist);
+            songRepository.save(song);
+        }
 
         return "redirect:/single";
     }
@@ -72,4 +72,6 @@ public class SingleController {
         classificationRepository.deleteById(id);
         return "redirect:/single";
     }
+
+
 }
