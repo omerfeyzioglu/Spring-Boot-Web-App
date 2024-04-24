@@ -25,6 +25,6 @@ public class Song {
     @Column(name = "duration_time")
     private LocalTime duration_time;
 
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "song", cascade = CascadeType.ALL)
     private List<Classification> classifications;
 }

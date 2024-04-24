@@ -29,6 +29,6 @@ public class Artist {
     @Column(name="country",length = 100)
     private String country;
 
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL)
     private List<Classification> classifications;
 }
