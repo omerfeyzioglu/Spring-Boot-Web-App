@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import com.example.demo.models.Artist;
 import com.example.demo.repositories.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,16 @@ public class ArtistController {
 
     @Autowired
     private ArtistRepository aRp;
+
+
+
+    @GetMapping("/x/y")
+    public ResponseEntity<String> getString(){
+
+
+            return ResponseEntity.ok("api fetched");
+}
+
 
     @GetMapping("/artist")
     private String getArtists(Model model){
