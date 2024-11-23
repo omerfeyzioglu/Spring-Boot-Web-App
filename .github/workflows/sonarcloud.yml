@@ -22,7 +22,7 @@ jobs:
 
       - name: Build and analyze with SonarCloud
         env:
-          SONAR_TOKEN: ${{ 74245f98178f4843437f1d8e6deeff5946107b58 }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           mvn clean verify sonar:sonar \
             -Dsonar.projectKey=omerfeyzioglu_Spring-Boot-Web-App \
