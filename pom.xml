@@ -59,6 +59,12 @@
                     <target>17</target>  <!-- Derleme için Java 17 -->
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>4.0.0.4121</version> <!-- Güncel sürüm -->
+            </plugin>
+
 
             <!-- Spring Boot Maven Plugin -->
             <plugin>
