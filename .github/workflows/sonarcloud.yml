@@ -29,4 +29,4 @@ jobs:
             -Dsonar.projectKey=omerfeyzioglu_Spring-Boot-Web-App \
             -Dsonar.organization=omerfeyzioglu_Spring-Boot-Web-App \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=${74245f98178f4843437f1d8e6deeff5946107b58}
+            -Dsonar.login=${{secrets.SONAR_TOKEN}}
