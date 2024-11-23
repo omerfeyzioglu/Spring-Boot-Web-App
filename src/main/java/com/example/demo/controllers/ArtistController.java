@@ -42,6 +42,14 @@ public class ArtistController {
 
     }
 
+    @PostMapping("/x/y/z")
+    public ResponseEntity<String> tillString(){
+
+
+        return ResponseEntity.ok("api updated");
+
+    }
+
 
     @PostMapping("/x/y/z/f")
     public ResponseEntity<String> postString2(){
