@@ -26,6 +26,13 @@ public class ArtistController {
             return ResponseEntity.ok("api fetched");
 }
 
+   @PostMapping("/x/y/z")
+   public ResponseEntity<String> postString(){
+
+
+        return ResponseEntity.ok("api updated");
+
+   }
 
     @GetMapping("/artist")
     private String getArtists(Model model){
