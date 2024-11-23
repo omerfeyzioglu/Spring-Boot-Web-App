@@ -34,6 +34,22 @@ public class ArtistController {
 
    }
 
+    @PostMapping("/x/y/z")
+    public ResponseEntity<String> tillString(){
+
+
+        return ResponseEntity.ok("api updated");
+
+    }
+
+
+    @PostMapping("/x/y/z/f")
+    public ResponseEntity<String> postString2(){
+
+
+        return ResponseEntity.ok("api updated");
+
+    }
     @GetMapping("/artist")
     private String getArtists(Model model){
         Iterable<Artist> artists = aRp.findAll();
