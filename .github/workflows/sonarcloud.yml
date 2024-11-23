@@ -25,7 +25,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn clean verify sonar:sonar \
+          mvn clean verify sonar:sonar -X \
             -Dsonar.projectKey=omerfeyzioglu_Spring-Boot-Web-App \
             -Dsonar.organization=omerfeyzioglu_Spring-Boot-Web-App \
             -Dsonar.host.url=https://sonarcloud.io \
