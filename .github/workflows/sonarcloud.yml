@@ -27,6 +27,6 @@ jobs:
         run: |
           mvn clean verify sonar:sonar -X \
             -Dsonar.projectKey=omerfeyzioglu_Spring-Boot-Web-App \
-            -Dsonar.organization=omerfeyzioglu_Spring-Boot-Web-App \
+            -Dsonar.organization=omerfeyzioglu \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${{secrets.SONAR_TOKEN}}

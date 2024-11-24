@@ -14,6 +14,12 @@
     <name>demo6</name>
     <description>demo6</description>
     <properties>
+
+            <sonar.projectKey>74245f98178f4843437f1d8e6deeff5946107b58</sonar.projectKey>
+            <sonar.organization>omerfeyzioglu</sonar.organization>
+            <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+
+
         <java.version>17</java.version>
     </properties>
     <dependencies>
