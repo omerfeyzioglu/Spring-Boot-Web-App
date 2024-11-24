@@ -36,7 +36,13 @@ public class ArtistController {
 
    //test4
 
+    @PostMapping("")
+    public ResponseEntity<String> returnString(){
 
+        return ResponseEntity.ok("string returned");
+
+
+    }
 
 
     @PostMapping("/x/y/z/f")
