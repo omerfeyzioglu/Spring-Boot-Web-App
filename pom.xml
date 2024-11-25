@@ -15,10 +15,14 @@
     <description>demo6</description>
     <properties>
 
-            <sonar.projectKey>74245f98178f4843437f1d8e6deeff5946107b58</sonar.projectKey>
-            <sonar.organization>omerfeyzioglu</sonar.organization>
-            <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-
+        <sonar.projectKey>74245f98178f4843437f1d8e6deeff5946107b58</sonar.projectKey>
+        <sonar.organization>omerfeyzioglu</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <spring.datasource.url>jdbc:h2:mem:testdb</spring.datasource.url>
+        <spring.datasource.driverClassName>org.h2.Driver</spring.datasource.driverClassName>
+        <spring.datasource.username>sa</spring.datasource.username>
+        <spring.datasource.password>password</spring.datasource.password>
+        <spring.jpa.database-platform>org.hibernate.dialect.H2Dialect</spring.jpa.database-platform>
 
         <java.version>17</java.version>
     </properties>
@@ -35,6 +39,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
 
 <!--        <dependency>-->
 <!--            <groupId>org.postgresql</groupId>-->
@@ -47,16 +61,17 @@
             <scope>runtime</scope>
         </dependency>
 
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope> <!-- Bu, Lombok'un çalışma zamanında kullanılmayacağını belirtir -->
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.projectlombok</groupId>-->
+<!--            <artifactId>lombok</artifactId>-->
+<!--            <scope>provided</scope> &lt;!&ndash; Bu, Lombok'un çalışma zamanında kullanılmayacağını belirtir &ndash;&gt;-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -80,6 +95,11 @@
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>4.0.0.4121</version> <!-- Güncel sürüm -->
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
             </plugin>
 
 

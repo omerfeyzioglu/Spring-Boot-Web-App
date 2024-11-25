@@ -31,4 +31,10 @@ public class Artist {
 
     @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL)
     private List<Classification> classifications;
+
+    public Artist(int i, String s) {
+    }
+
+    public Artist(String newArtist) {
+    }
 }
