@@ -21,12 +21,21 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build and analyze with SonarCloud
+      - name: Build, test, and analyze with SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn clean verify sonar:sonar \
+          mvn clean verify sonar:sonar -X \
             -Dsonar.projectKey=omerfeyzioglu_Spring-Boot-Web-App \
             -Dsonar.organization=omerfeyzioglu \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${{secrets.SONAR_TOKEN}}
+
+      - name: Run JUnit Tests
+        run: mvn test
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: junit-test-reports
+          path: target/surefire-reports

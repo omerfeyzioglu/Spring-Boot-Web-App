@@ -27,4 +27,7 @@ public class Song {
 
     @OneToMany(mappedBy = "song", cascade = CascadeType.ALL)
     private List<Classification> classifications;
+
+    public Song(int i, String s) {
+    }
 }
