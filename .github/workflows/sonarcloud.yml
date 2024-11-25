@@ -1,4 +1,4 @@
-name: SonarCloud Analysis
+name: SonarCloud Analysis and Notification
 
 on:
   push:
@@ -7,21 +7,25 @@ on:
   pull_request:
 
 jobs:
-  sonarcloud:
-    name: SonarCloud Scan
+  sonarcloud-and-notify:
+    name: SonarCloud Scan and Notify
     runs-on: ubuntu-latest
 
     steps:
+      # Kodu Çek
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Java Kur
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
+      # SonarCloud Analizi ve Test Çalıştır
       - name: Build, test, and analyze with SonarCloud
+        id: sonarcloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
@@ -29,13 +33,35 @@ jobs:
             -Dsonar.projectKey=omerfeyzioglu_Spring-Boot-Web-App \
             -Dsonar.organization=omerfeyzioglu \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=${{secrets.SONAR_TOKEN}}
+            -Dsonar.login=${{secrets.SONAR_TOKEN}} | tee sonar-output.log
+          TEST_RESULT=$(grep -o "BUILD SUCCESS" sonar-output.log || true)
+          echo "test_result=$TEST_RESULT" >> $GITHUB_ENV
 
+      # Testleri Çalıştır
       - name: Run JUnit Tests
-        run: mvn test
+        id: junit-tests
+        run: |
+          mvn test | tee test-output.log
+          TEST_COUNT=$(grep -oP '(?<=Tests run: )\d+' test-output.log | tail -1)
+          FAILURES=$(grep -oP '(?<=Failures: )\d+' test-output.log | tail -1)
+          ERRORS=$(grep -oP '(?<=Errors: )\d+' test-output.log | tail -1)
+          echo "tests_count=$TEST_COUNT" >> $GITHUB_ENV
+          echo "failures=$FAILURES" >> $GITHUB_ENV
+          echo "errors=$ERRORS" >> $GITHUB_ENV
 
-      - name: Upload test reports
-        uses: actions/upload-artifact@v3
-        with:
-          name: junit-test-reports
-          path: target/surefire-reports
+      # Slack'e Sonuç Bildirimi
+      - name: Notify Slack
+        if: always()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [[ "$TEST_RESULT" == "BUILD SUCCESS" && ${{ env.failures }} -eq 0 && ${{ env.errors }} -eq 0 ]]; then
+            curl -X POST -H 'Content-type: application/json' \
+              --data '{"text":"✅ SonarCloud analysis passed, and all tests passed successfully!"}' $SLACK_WEBHOOK_URL
+          elif [[ "$TEST_RESULT" != "BUILD SUCCESS" ]]; then
+            curl -X POST -H 'Content-type: application/json' \
+              --data "{\"text\":\"❌ SonarCloud analysis failed! Check the logs.\"}" $SLACK_WEBHOOK_URL
+          elif [[ ${{ env.failures }} -gt 0 || ${{ env.errors }} -gt 0 ]]; then
+            curl -X POST -H 'Content-type: application/json' \
+              --data "{\"text\":\"❌ Tests failed: ${{ env.failures }} failures, ${{ env.errors }} errors.\"}" $SLACK_WEBHOOK_URL
+          fi
