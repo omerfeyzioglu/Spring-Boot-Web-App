@@ -58,7 +58,7 @@ public class ArtistController {
     }
     @GetMapping("/artist")
     private String getArtists(Model model){
-        Iterable<Artist> artists = aRp.findAll();
+        Iterable<Artist> artists = aRp.findAll().get();
         model.addAttribute("artist", artists);
         return "artist/index" ;
     }
