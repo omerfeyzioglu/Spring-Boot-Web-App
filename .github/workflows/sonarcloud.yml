@@ -1,4 +1,4 @@
-name: SonarCloud Analysis
+name: SonarCloud Analysis and Notification
 
 on:
   push:
@@ -7,21 +7,25 @@ on:
   pull_request:
 
 jobs:
-  sonarcloud:
-    name: SonarCloud Scan
+  sonarcloud-and-notify:
+    name: SonarCloud Scan and Notify
     runs-on: ubuntu-latest
 
     steps:
+      # Kodu Çek
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Java Kur
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
+      # SonarCloud Analizi ve Test Çalıştır
       - name: Build, test, and analyze with SonarCloud
+        id: sonarcloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
@@ -29,13 +33,51 @@ jobs:
             -Dsonar.projectKey=omerfeyzioglu_Spring-Boot-Web-App \
             -Dsonar.organization=omerfeyzioglu \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=${{secrets.SONAR_TOKEN}}
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }} | tee sonar-output.log
+          TEST_RESULT=$(grep -o "BUILD SUCCESS" sonar-output.log || true)
+          echo "test_result=$TEST_RESULT" >> $GITHUB_ENV
 
+      # Testleri Çalıştır
       - name: Run JUnit Tests
-        run: mvn test
+        id: junit-tests
+        run: |
+          mvn test | tee test-output.log
+          TEST_COUNT=$(grep -oP '(?<=Tests run: )\d+' test-output.log | tail -1)
+          FAILURES=$(grep -oP '(?<=Failures: )\d+' test-output.log | tail -1)
+          ERRORS=$(grep -oP '(?<=Errors: )\d+' test-output.log | tail -1)
+          echo "tests_count=$TEST_COUNT" >> $GITHUB_ENV
+          echo "failures=$FAILURES" >> $GITHUB_ENV
+          echo "errors=$ERRORS" >> $GITHUB_ENV
 
-      - name: Upload test reports
-        uses: actions/upload-artifact@v3
-        with:
-          name: junit-test-reports
-          path: target/surefire-reports
+      # Slack'e Sonuç Bildirimi
+      - name: Notify Slack
+        if: always()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          PR_URL="https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}"
+          
+          # SonarCloud Durumu
+          if [[ "$TEST_RESULT" == "BUILD SUCCESS" ]]; then
+            SONAR_STATUS="✅ SonarCloud analysis passed."
+          else
+            SONAR_STATUS="❌ SonarCloud analysis failed! Check the logs."
+          fi
+
+          # JUnit Test Durumu
+          if [[ ${{ env.failures }} -eq 0 && ${{ env.errors }} -eq 0 ]]; then
+            TEST_STATUS="✅ JUnit tests passed successfully! All ${{ env.tests_count }} tests passed."
+          else
+            TEST_STATUS="❌ JUnit tests failed: ${{ env.failures }} failures, ${{ env.errors }} errors out of ${{ env.tests_count }} tests."
+          fi
+
+          # PR Başlığı ve Hata Bilgisi
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+            PR_INFO="PR #${{ github.event.pull_request.number }}: ${PR_URL}"
+          else
+            PR_INFO="No PR associated with this push."
+          fi
+
+          # Slack'e Mesaj Gönder
+          curl -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"${SONAR_STATUS}\n${TEST_STATUS}\n${PR_INFO}\"}" $SLACK_WEBHOOK_URL
