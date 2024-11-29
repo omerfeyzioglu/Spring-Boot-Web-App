@@ -17,11 +17,7 @@ public class ArtistController {
     @Autowired
     private ArtistRepository aRp;
 
-    @PostMapping("/talha")
-    public ResponseEntity<String> addArtist() {
 
-        return ResponseEntity.ok("Talha");
-    }
 
     @GetMapping("/x/y")
     public ResponseEntity<String> getString(){
@@ -58,7 +54,7 @@ public class ArtistController {
     }
     @GetMapping("/artist")
     private String getArtists(Model model){
-        Iterable<Artist> artists = aRp.findAll().get();
+        Iterable<Artist> artists = aRp.findAll();
         model.addAttribute("artist", artists);
         return "artist/index" ;
     }
