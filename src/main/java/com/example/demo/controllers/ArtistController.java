@@ -18,15 +18,6 @@ public class ArtistController {
     private ArtistRepository aRp;
 
 
-
-    @GetMapping("/artist/count")
-    public ResponseEntity<Long> getArtistCount() {
-        long artistCount = aRp.count();
-        return ResponseEntity.ok(artistCount);
-    }
-
-
-    
     @GetMapping("/artist")
     private String getArtists(Model model){
         Iterable<Artist> artists = aRp.findAll();
