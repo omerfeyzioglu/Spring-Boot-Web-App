@@ -18,44 +18,6 @@ public class ArtistController {
     private ArtistRepository aRp;
 
 
-
-    @GetMapping("/x/y")
-    public ResponseEntity<String> getString(){
-
-
-            return ResponseEntity.ok("api fetched");
-}
-
-   @PostMapping("/x/y/z")
-   public ResponseEntity<String> postString(){
-
-
-        return ResponseEntity.ok("api updated");
-
-   }
-
-    @GetMapping("/artist/count")
-    public ResponseEntity<Long> getArtistCount() {
-        long artistCount = aRp.count();
-        return ResponseEntity.ok(artistCount);
-    }
-
-    @PostMapping("")
-    public ResponseEntity<String> returnString(){
-
-        return ResponseEntity.ok("string returned");
-
-
-    }
-
-
-    @PostMapping("/x/y/z/f")
-    public ResponseEntity<String> postString2(){
-
-
-        return ResponseEntity.ok("api updated");
-
-    }
     @GetMapping("/artist")
     private String getArtists(Model model){
         Iterable<Artist> artists = aRp.findAll();
