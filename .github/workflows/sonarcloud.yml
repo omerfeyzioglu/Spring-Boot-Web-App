@@ -23,17 +23,23 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # SonarCloud Analizi ve Test Çalıştır
+      # Test Raporu İçin Jacoco Eklentisi
+      - name: Build, test, and generate Jacoco report
+        run: |
+          mvn clean verify -Djacoco.skip=false
+
+      # SonarCloud Analizi ve Test Raporlarını Gönder
       - name: Build, test, and analyze with SonarCloud
         id: sonarcloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn clean verify sonar:sonar -X \
+          mvn sonar:sonar -X \
             -Dsonar.projectKey=omerfeyzioglu_Spring-Boot-Web-App \
             -Dsonar.organization=omerfeyzioglu \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }} | tee sonar-output.log
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml | tee sonar-output.log
           TEST_RESULT=$(grep -o "BUILD SUCCESS" sonar-output.log || true)
           echo "test_result=$TEST_RESULT" >> $GITHUB_ENV
 
