@@ -34,7 +34,11 @@ public class ArtistController {
 
    }
 
-   //test4
+    @GetMapping("/artist/count")
+    public ResponseEntity<Long> getArtistCount() {
+        long artistCount = aRp.count();
+        return ResponseEntity.ok(artistCount);
+    }
 
     @PostMapping("")
     public ResponseEntity<String> returnString(){
