@@ -17,11 +17,7 @@ public class ArtistController {
     @Autowired
     private ArtistRepository aRp;
 
-    @PostMapping("/talha")
-    public ResponseEntity<String> addArtist() {
 
-        return ResponseEntity.ok("Talha");
-    }
 
     @GetMapping("/x/y")
     public ResponseEntity<String> getString(){
@@ -38,7 +34,11 @@ public class ArtistController {
 
    }
 
-   //test4
+    @GetMapping("/artist/count")
+    public ResponseEntity<Long> getArtistCount() {
+        long artistCount = aRp.count();
+        return ResponseEntity.ok(artistCount);
+    }
 
     @PostMapping("")
     public ResponseEntity<String> returnString(){

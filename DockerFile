@@ -1,0 +1,13 @@
+# syntax=docker/dockerfile:1
+
+# Node.js'in Alpine sürümünü temel alın
+FROM node:18-alpine
+
+# Uygulama dizinini oluştur
+RUN mkdir -p /app
+
+# Çalışma dizinini ayarla
+WORKDIR /app
+
+# Varsayılan komut
+CMD ["node"]
