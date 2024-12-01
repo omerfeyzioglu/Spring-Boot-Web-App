@@ -25,6 +25,8 @@ public class ArtistController {
         return "artist/index" ;
     }
 
+    //deneme
+
     @GetMapping("/artist/add")
     public String addArtist(Model model){
         Artist artist = new Artist();
