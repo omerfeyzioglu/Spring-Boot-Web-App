@@ -25,7 +25,12 @@ public class ArtistController {
         return "artist/index" ;
     }
 
-    //deneme
+    @GetMapping("/x")
+    public ResponseEntity<String> returnX(){
+
+        return ResponseEntity.ok("ok");
+
+    }
 
     @GetMapping("/artist/add")
     public String addArtist(Model model){
